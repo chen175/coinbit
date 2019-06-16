@@ -101,5 +101,26 @@ responose:
 |    transacation|   Integer |  交易数量 |
 
 
+## 4 获取当前最新交易
+
+method：GET  
+url: /transacation/getRecentTransacation
+
+responose:
+```json
+{
+    "transactionHash": "c09a5947c95d4ce714b82529eb8289b17f8395087bc8085cbcab9e6c3f194bfa",
+    "time": "2019-06-15T02:29:30.586+0000",
+    "amount": 0.02423692
+}
+```
+
+| ResponseField     |     Type |   Description   | 
+| :--------------: | :--------:| :------: |
+|    transactionHash|   String |  交易hash |
+|    time|   Date |  交易时间 |
+|    amount|   double |  交易价格 |
+
+
 
 

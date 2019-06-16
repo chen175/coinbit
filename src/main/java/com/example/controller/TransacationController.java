@@ -16,8 +16,8 @@ import java.util.Date;
 @RequestMapping("/transacation")
 @EnableAutoConfiguration
 public class TransacationController {
-    @Autowired
-    private TransacationMapper transacationMapper;
+//    @Autowired
+//    private TransacationMapper transacationMapper;
     @GetMapping("/getRecentTransacation")
     public TransacationDto getRecentTransacation(){
         TransacationDto transacationDto = new TransacationDto();
