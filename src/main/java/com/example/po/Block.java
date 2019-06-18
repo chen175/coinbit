@@ -9,7 +9,7 @@ public class Block {
 
     private Date time;
 
-    private double size;
+    private Integer size;
 
     private Double difficulty;
 
@@ -20,14 +20,6 @@ public class Block {
     private String prevBlock;
 
     private Integer transacation;
-
-    public Integer getTransacation() {
-        return transacation;
-    }
-
-    public void setTransacation(Integer transacation) {
-        this.transacation = transacation;
-    }
 
     public String getBlockhash() {
         return blockhash;
@@ -53,11 +45,11 @@ public class Block {
         this.time = time;
     }
 
-    public double getSize() {
+    public Integer getSize() {
         return size;
     }
 
-    public void setSize(double size) {
+    public void setSize(Integer size) {
         this.size = size;
     }
 
@@ -91,5 +83,13 @@ public class Block {
 
     public void setPrevBlock(String prevBlock) {
         this.prevBlock = prevBlock == null ? null : prevBlock.trim();
+    }
+
+    public Integer getTransacation() {
+        return transacation;
+    }
+
+    public void setTransacation(Integer transacation) {
+        this.transacation = transacation;
     }
 }

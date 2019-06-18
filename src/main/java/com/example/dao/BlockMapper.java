@@ -1,6 +1,9 @@
 package com.example.dao;
 
+import com.example.dto.BlockListDto;
 import com.example.po.Block;
+
+import java.util.List;
 
 public interface BlockMapper {
     int deleteByPrimaryKey(String blockhash);
@@ -14,4 +17,11 @@ public interface BlockMapper {
     int updateByPrimaryKeySelective(Block record);
 
     int updateByPrimaryKey(Block record);
+
+    List<BlockListDto> selectRecentBlocks();
+
+    Block getBlockByHash(String blockhash);
+
+    Block getBlockByHeight(Integer height);
+
 }

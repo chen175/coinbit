@@ -31,7 +31,6 @@ public class TransacationController {
         Transacation transacation = new Transacation();
         transacation.setAmout(0.02423692);
         transacation.setBlockhash("b2e3c93266d063c6f633565fe8523842516ef8d13b09629df86fb821cc894f4f");
-        transacation.setConfirmations(200);
         transacation.setSize(216);
         transacation.setTime(new Date());
         transacation.setTxhash("b2e3c93266d063c6f633565fe8523842516ef8d13b09629df86fb821cc894f4f");

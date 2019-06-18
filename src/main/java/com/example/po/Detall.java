@@ -16,7 +16,7 @@ public class Detall {
     }
 
     public void setTxDetallId(String txDetallId) {
-        this.txDetallId = txDetallId;
+        this.txDetallId = txDetallId == null ? null : txDetallId.trim();
     }
 
     public String getAdress() {

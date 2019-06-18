@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.dao.DetallMapper">
   <resultMap id="BaseResultMap" type="com.example.po.Detall">
-    <id column="tx_detall_id" jdbcType="String" property="txDetallId" />
+    <id column="tx_detall_id" jdbcType="VARCHAR" property="txDetallId" />
     <result column="adress" jdbcType="VARCHAR" property="adress" />
     <result column="amount" jdbcType="DOUBLE" property="amount" />
     <result column="type" jdbcType="TINYINT" property="type" />
@@ -24,7 +24,7 @@
   <insert id="insert" parameterType="com.example.po.Detall">
     insert into tx_detall (tx_detall_id, adress, amount, 
       type, txhash)
-    values (#{txDetallId,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, #{amount,jdbcType=DOUBLE},
+    values (#{txDetallId,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, #{amount,jdbcType=DOUBLE}, 
       #{type,jdbcType=TINYINT}, #{txhash,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.example.po.Detall">

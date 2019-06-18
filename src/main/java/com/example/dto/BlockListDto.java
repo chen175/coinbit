@@ -5,10 +5,8 @@ import java.util.Date;
 public class BlockListDto {
     private Integer height;
     private Date time;
-    private String blockhash;
     private double size;
     private Integer transacation;
-    private String miner;
 
     public Integer getHeight() {
         return height;
@@ -26,14 +24,6 @@ public class BlockListDto {
         this.time = time;
     }
 
-    public String getBlockhash() {
-        return blockhash;
-    }
-
-    public void setBlockhash(String blockhash) {
-        this.blockhash = blockhash;
-    }
-
     public double getSize() {
         return size;
     }
@@ -48,13 +38,5 @@ public class BlockListDto {
 
     public void setTransacation(Integer transacation) {
         this.transacation = transacation;
-    }
-
-    public String getMiner() {
-        return miner;
-    }
-
-    public void setMiner(String miner) {
-        this.miner = miner;
     }
 }
