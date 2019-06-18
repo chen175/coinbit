@@ -1,6 +1,9 @@
 package com.example.dao;
 
+import com.example.dto.TransacationDto;
 import com.example.po.Transacation;
+
+import java.util.List;
 
 public interface TransacationMapper {
     int deleteByPrimaryKey(String txhash);
@@ -14,4 +17,9 @@ public interface TransacationMapper {
     int updateByPrimaryKeySelective(Transacation record);
 
     int updateByPrimaryKey(Transacation record);
+
+    List<TransacationDto> getRecentTransacation();
+
+    Transacation getTransacationByHash(String hash);
+
 }
