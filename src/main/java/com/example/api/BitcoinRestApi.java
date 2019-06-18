@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "BitcoinRestApi",url = "http://localhost:18332")
+@FeignClient(name = "BitcoinRestApi", url = "http://localhost:18332")
 public interface BitcoinRestApi {
     @GetMapping("/rest/chaininfo.json")
     JSONObject getBlockChainInfo();
@@ -31,5 +31,11 @@ public interface BitcoinRestApi {
 
     @GetMapping("/rest/mempool/contents.json")
     JSONObject getMempoolContents();
+
+    @GetMapping("/rest/getutxos/{txid}-{n}.json")
+    JSONObject getUTXO(@PathVariable String txid,@PathVariable Integer n);
+
+    @GetMapping("/rest/getutxos/checkmempool/{txid}-{n}.json")
+    JSONObject getUTXOCheckMempool(@PathVariable String txid,@PathVariable Integer n);
 
 }
