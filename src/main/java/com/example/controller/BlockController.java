@@ -42,4 +42,9 @@ public class BlockController {
         return blockService.getBlockByHeight(height);
     }
 
+    @GetMapping("/getBalance")
+    public Double getBalance(String address){
+        return blockService.getBlance(address);
+    }
+
 }

@@ -13,4 +13,6 @@ public interface BlockService {
 
 
     Block getBlockByHeight(Integer height);
+
+    Double getBlance(String address);
 }

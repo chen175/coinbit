@@ -24,4 +24,5 @@ public interface BlockMapper {
 
     Block getBlockByHeight(Integer height);
 
+    Double getBlance(String address);
 }

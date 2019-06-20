@@ -29,6 +29,11 @@
     where blockhash = #{blockhash,jdbcType=CHAR}
   </select>
 
+  <select id="getBlance" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT SUM(amount) from tx_detall
+    where address = #{address}
+  </select>
+
 
   <select id="getBlockByHash" parameterType="java.lang.String" resultMap="BaseResultMap">
     select

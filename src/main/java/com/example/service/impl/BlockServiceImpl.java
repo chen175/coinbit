@@ -29,4 +29,9 @@ public class BlockServiceImpl implements BlockService {
     public Block getBlockByHeight(Integer height) {
         return blockMapper.getBlockByHeight(height);
     }
+
+    @Override
+    public Double getBlance(String address) {
+        return blockMapper.getBlance(address);
+    }
 }
