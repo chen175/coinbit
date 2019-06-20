@@ -5,9 +5,10 @@ import com.example.dto.TransacationDto;
 import com.example.po.Transacation;
 import com.example.service.TransacationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class TransacationServiceImpl implements TransacationService {
     @Autowired
     private TransacationMapper transacationMapper;

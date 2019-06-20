@@ -2,7 +2,11 @@ package com.example.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.api.BitcoinJsonRpcApi;
+import com.example.dao.DetallMapper;
 import com.example.dao.TransacationMapper;
+import com.example.enumeration.TxDetailType;
+import com.example.po.Detall;
 import com.example.po.Transacation;
 import com.example.service.BitcoinService;
 import com.example.api.BitcoinRestApi;
@@ -27,13 +31,17 @@ public class BitcoinServiceImpl implements BitcoinService {
     private BlockMapper blockMapper;
     @Autowired
     private TransacationMapper transacationMapper;
+    @Autowired
+    private DetallMapper detailMapper;
+    @Autowired
+    private BitcoinJsonRpcApi bitcoinJsonRpcApi;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     @Async
     @Transactional
-    public void syncBlock(String blockhash) {
+    public void syncBlock(String blockhash) throws Throwable {
         logger.info("begin to sync block from {}", blockhash);
         String tempBlockhash = blockhash;
         while (tempBlockhash != null && !tempBlockhash.isEmpty()) {
@@ -66,38 +74,69 @@ public class BitcoinServiceImpl implements BitcoinService {
 
     @Override
     @Transactional
-    public void syncTx(JSONObject txJson, String blockhash, Date time, Integer confirmations) {
+    public void syncTx(JSONObject txJson, String blockhash, Date time, Integer confirmations) throws Throwable {
         Transacation transacation = new Transacation();
-        transacation.setTxhash(txJson.getString("txid"));
+        String txid = txJson.getString("txid");
+        transacation.setTxhash(txid);
         transacation.setTime(time);
         transacation.setBlockhash(blockhash);
         transacation.setSize(txJson.getInteger("size"));
         transacation.setWeight(txJson.getFloat("weight"));
         transacation.setConfirmations(confirmations);
         transacationMapper.insertSelective(transacation);
-
-        syncTxDetail(txJson);
+        syncTxDetail(txJson,txid);
     }
 
     @Override
     @Transactional
-    public void syncTxDetail(JSONObject txjson) {
+    public void syncTxDetail(JSONObject txjson, String txid) throws Throwable {
         JSONArray vout = txjson.getJSONArray("vout");
-        syncDetailvout(vout);
+        syncDetailvout(vout, txid);
         JSONArray vin = txjson.getJSONArray("vin");
-        syncDetailvin(vin);
+        syncDetailvin(vin, txid);
     }
 
     @Override
-    public void syncDetailvin(JSONArray vins) {
-
-    }
-
-    @Override
-    public void syncDetailvout(JSONArray vouts) {
+    @Transactional
+    public void syncDetailvout(JSONArray vouts, String txid) {
         for (Object vout : vouts) {
             JSONObject jsonObject = new JSONObject((LinkedHashMap) vout);
+            Detall detail = new Detall();
+            detail.setTxhash(txid);
+            detail.setAmount(jsonObject.getDouble("value"));
+            detail.setType((byte) TxDetailType.Receive.ordinal());
+            JSONObject scriptPubKey = jsonObject.getJSONObject("scriptPubKey");
+            JSONArray address = scriptPubKey.getJSONArray("addresses");
+            if (address != null) {
+                String string = address.getString(0);
+                detail.setAdress(string);
+            }
+            detailMapper.insertSelective(detail);
         }
+    }
+
+    @Override
+    public void syncDetailvin(JSONArray vins, String txid) throws Throwable {
+        for (Object vin : vins) {
+            JSONObject jsonObject = new JSONObject((LinkedHashMap) vin);
+            String vintxid = jsonObject.getString("txid");
+            Integer n = jsonObject.getInteger("vout");
+            if (vintxid != null) {
+                JSONObject transactionById = bitcoinJsonRpcApi.getTransactionById(vintxid);
+                JSONArray vout = transactionById.getJSONArray("vout");
+                JSONObject jsonObject1 = vout.getJSONObject(n);
+                Detall detail = new Detall();
+                detail.setAmount(jsonObject1.getDouble("value"));
+                detail.setType((byte)TxDetailType.Send.ordinal());
+                JSONObject scriptPubKey = jsonObject1.getJSONObject("scriptPubKey");
+                JSONArray addresses = scriptPubKey.getJSONArray("addresses");
+                if(addresses != null){
+                    detail.setAdress(addresses.getString(0));
+                }
+                detailMapper.insertSelective(detail);
+            }
+        }
+
     }
 
 

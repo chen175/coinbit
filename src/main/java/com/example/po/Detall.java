@@ -1,7 +1,7 @@
 package com.example.po;
 
 public class Detall {
-    private String txDetallId;
+    private Integer txDetallId;
 
     private String adress;
 
@@ -11,12 +11,12 @@ public class Detall {
 
     private String txhash;
 
-    public String getTxDetallId() {
+    public Integer getTxDetallId() {
         return txDetallId;
     }
 
-    public void setTxDetallId(String txDetallId) {
-        this.txDetallId = txDetallId == null ? null : txDetallId.trim();
+    public void setTxDetallId(Integer txDetallId) {
+        this.txDetallId = txDetallId;
     }
 
     public String getAdress() {
