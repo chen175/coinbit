@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dao.DetallMapper;
 import com.example.dao.TransacationMapper;
 import com.example.dto.TransacationDto;
 import com.example.po.Transacation;
@@ -20,12 +21,21 @@ import java.util.List;
 public class TransacationController {
     @Autowired
     private TransacationService transacationService;
+    @Autowired
+    private DetallMapper detailMapper;
     @GetMapping("/getRecentTransacation")
-    public List<TransacationDto> getRecentTransacation(){
-        return transacationService.getRecentTransacation();
+    public List<TransacationDto> getRecentTransacation() {
+        List<TransacationDto> recentTransacation = transacationService.getRecentTransacation();
+        for (TransacationDto transacationDto : recentTransacation) {
+            String txhash = transacationDto.getTransactionHash();
+            Double amount = detailMapper.getAmount(txhash);
+            transacationDto.setAmount(amount);
+        }
+        return recentTransacation;
     }
+
     @GetMapping("/getTransacationByHash")
-    public Transacation getTransacationByHash(@RequestParam String hash){
+    public Transacation getTransacationByHash(@RequestParam String hash) {
         return transacationService.getTransacationByHash(hash);
     }
 }

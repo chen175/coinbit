@@ -7,15 +7,13 @@ import com.example.dto.BlockListDto;
 import com.example.po.Block;
 import com.example.service.BlockService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/block")
+@CrossOrigin
 public class BlockController {
     @Autowired
     private BitcoinRestApi bitcoinRestApi;
@@ -24,6 +22,7 @@ public class BlockController {
 
     @Autowired
     private BitcoinJsonRpcApi bitcoinJsonRpcApi;
+
     //todo
     @GetMapping("/getRecentBlocks")
     public List<BlockListDto> getRecentBlocks() throws Throwable {
@@ -43,7 +42,7 @@ public class BlockController {
     }
 
     @GetMapping("/getBalance")
-    public Double getBalance(String address){
+    public Double getBalance(String address) {
         return blockService.getBlance(address);
     }
 

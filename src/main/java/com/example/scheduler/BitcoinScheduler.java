@@ -10,8 +10,8 @@ public class BitcoinScheduler {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Scheduled(fixedRate = 10*60*1000)
-    public void synData(){
+    @Scheduled(fixedRate = 10 * 60 * 1000)
+    public void synData() {
         logger.info("begin to sync data");
     }
 }

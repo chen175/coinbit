@@ -15,8 +15,9 @@ import java.util.List;
 public class DetallController {
     @Autowired
     private DetallMapper detailMapper;
+
     @RequestMapping("/getDetallByHash")
-    public Detall getDetallByHash(@RequestParam String hash){
+    public Detall getDetallByHash(@RequestParam String hash) {
         Detall detall = detailMapper.selectByPrimaryKey(hash);
         return detall;
     }

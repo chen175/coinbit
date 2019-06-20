@@ -16,8 +16,8 @@ public class BitcoinJsonRpcApiImpl implements BitcoinJsonRpcApi {
     private JsonRpcHttpClient jsonRpcHttpClient;
 
     public BitcoinJsonRpcApiImpl(@Value("${bitcoin.jsonrpc.username}") String username,
-                                 @Value("${bitcoin.jsonrpc.passsword}")String password,
-                                 @Value("${bitcoin.jsonrpc.url}")String url) throws MalformedURLException {
+                                 @Value("${bitcoin.jsonrpc.passsword}") String password,
+                                 @Value("${bitcoin.jsonrpc.url}") String url) throws MalformedURLException {
         HashMap<String, String> headers = new HashMap<>();
         String authStrOrig = String.format("%s:%s", username, password);
         String authStr = Base64.getEncoder().encodeToString(authStrOrig.getBytes());
@@ -31,6 +31,7 @@ public class BitcoinJsonRpcApiImpl implements BitcoinJsonRpcApi {
         JSONObject getblockchaininfo = jsonRpcHttpClient.invoke("getblockchaininfo", new Object[]{}, JSONObject.class);
         return getblockchaininfo;
     }
+
     @Override
     public JSONObject getBlockByHash(String blockhash) throws Throwable {
         JSONObject jsonObject = jsonRpcHttpClient.invoke("getblock", new Object[]{blockhash}, JSONObject.class);
@@ -39,7 +40,7 @@ public class BitcoinJsonRpcApiImpl implements BitcoinJsonRpcApi {
 
     @Override
     public JSONObject getTransactionById(String txid) throws Throwable {
-        JSONObject jsonObject = jsonRpcHttpClient.invoke("getrawtransaction", new Object[]{txid,true}, JSONObject.class);
+        JSONObject jsonObject = jsonRpcHttpClient.invoke("getrawtransaction", new Object[]{txid, true}, JSONObject.class);
         return jsonObject;
     }
 

@@ -1,6 +1,7 @@
 package com.example.dao;
 
 import com.example.po.Detall;
+import org.apache.ibatis.annotations.Param;
 
 public interface DetallMapper {
     int deleteByPrimaryKey(String txDetallId);
@@ -14,4 +15,7 @@ public interface DetallMapper {
     int updateByPrimaryKeySelective(Detall record);
 
     int updateByPrimaryKey(Detall record);
+
+    Double getAmount(String txhash);
+
 }
