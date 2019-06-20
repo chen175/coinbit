@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 @Service
 public class BitcoinServiceImpl implements BitcoinService {
@@ -40,36 +39,43 @@ public class BitcoinServiceImpl implements BitcoinService {
 
     @Override
     @Async
-    @Transactional
-    public void syncBlock(String blockhash) throws Throwable {
-        logger.info("begin to sync block from {}", blockhash);
+    public void ssyncBlockChainFromHash(String blockhash) throws Throwable {
+        logger.info("begin to sync blockchain from {}", blockhash);
         String tempBlockhash = blockhash;
         while (tempBlockhash != null && !tempBlockhash.isEmpty()) {
-            JSONObject blockByHash = bitcoinRestApi.getBlockByHash(tempBlockhash);
-            Block block = new Block();
-            block.setBlockhash(blockByHash.getString("hash"));
-            block.setHeight(blockByHash.getInteger("height"));
-            Long timestamp = blockByHash.getLong("time");
-            Date time = new Date(timestamp * 1000);
-            block.setTime(time);
-            block.setSize(blockByHash.getInteger("size"));
-            block.setDifficulty(blockByHash.getDouble("difficulty"));
-            block.setWeight(blockByHash.getFloat("weight"));
-            block.setNextBlock(blockByHash.getString("nextblockhash"));
-            block.setPrevBlock(blockByHash.getString("previousblockhash"));
-            block.setTransacation(blockByHash.getInteger("nTx"));
-            Integer confirmations = blockByHash.getInteger("confirmations");
-            blockMapper.insertSelective(block);
-
-            //tx
-            JSONArray tx = blockByHash.getJSONArray("tx");
-            for (Object o : tx) {
-                JSONObject jsonObject = new JSONObject((LinkedHashMap) o);
-                syncTx(jsonObject, tempBlockhash, time, confirmations);
-            }
-            tempBlockhash = block.getNextBlock();
+            tempBlockhash = syncBlock(tempBlockhash);
         }
-        logger.info("end sync block ");
+        logger.info("end sync blockchain ");
+    }
+
+    @Override
+    @Transactional
+    public String syncBlock(String blockhash) throws Throwable {
+        logger.info("begin to sync block from {}", blockhash);
+        JSONObject blockByHash = bitcoinRestApi.getBlockByHash(blockhash);
+        Block block = new Block();
+        block.setBlockhash(blockByHash.getString("hash"));
+        block.setHeight(blockByHash.getInteger("height"));
+        Long timestamp = blockByHash.getLong("time");
+        Date time = new Date(timestamp * 1000);
+        block.setTime(time);
+        block.setSize(blockByHash.getInteger("size"));
+        block.setDifficulty(blockByHash.getDouble("difficulty"));
+        block.setWeight(blockByHash.getFloat("weight"));
+        block.setNextBlock(blockByHash.getString("nextblockhash"));
+        block.setPrevBlock(blockByHash.getString("previousblockhash"));
+        block.setTransacation(blockByHash.getInteger("nTx"));
+        Integer confirmations = blockByHash.getInteger("confirmations");
+        blockMapper.insertSelective(block);
+
+        //tx
+        JSONArray tx = blockByHash.getJSONArray("tx");
+        for (Object o : tx) {
+            JSONObject jsonObject = new JSONObject((LinkedHashMap) o);
+            syncTx(jsonObject, blockhash, time, confirmations);
+        }
+        logger.info("end sync block");
+        return block.getNextBlock();
     }
 
     @Override
@@ -84,7 +90,7 @@ public class BitcoinServiceImpl implements BitcoinService {
         transacation.setWeight(txJson.getFloat("weight"));
         transacation.setConfirmations(confirmations);
         transacationMapper.insertSelective(transacation);
-        syncTxDetail(txJson,txid);
+        syncTxDetail(txJson, txid);
     }
 
     @Override
@@ -127,10 +133,10 @@ public class BitcoinServiceImpl implements BitcoinService {
                 JSONObject jsonObject1 = vout.getJSONObject(n);
                 Detall detail = new Detall();
                 detail.setAmount(jsonObject1.getDouble("value"));
-                detail.setType((byte)TxDetailType.Send.ordinal());
+                detail.setType((byte) TxDetailType.Send.ordinal());
                 JSONObject scriptPubKey = jsonObject1.getJSONObject("scriptPubKey");
                 JSONArray addresses = scriptPubKey.getJSONArray("addresses");
-                if(addresses != null){
+                if (addresses != null) {
                     detail.setAdress(addresses.getString(0));
                 }
                 detailMapper.insertSelective(detail);
